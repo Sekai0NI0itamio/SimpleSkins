@@ -3,30 +3,27 @@ package com.simpleskins.simpleskins;
 import org.junit.Test;
 
 /**
- * Temporary oracle: prints the real 1.20.1 client skin member names from CI's
- * decompiled Minecraft so the skin applier uses exact field names.
+ * Temporary oracle round 2: full PlayerInfo method list.
  */
 public class SkinOracleTest {
     @Test
     public void dumpSkinMembers() {
-        dump("net.minecraft.client.multiplayer.PlayerInfo");
-    }
-
-    static void dump(String name) {
         try {
-            Class<?> found = Class.forName(name);
-            System.out.println("ORACLE-CLASS " + name);
-            for (java.lang.reflect.Field field : found.getDeclaredFields()) {
-                System.out.println("ORACLE-FIELD " + field.getType().getSimpleName() + " " + field.getName());
-            }
+            Class<?> found = Class.forName("net.minecraft.client.multiplayer.PlayerInfo");
+            System.out.println("ORACLE2-CLASS " + found.getName());
             for (java.lang.reflect.Method method : found.getDeclaredMethods()) {
-                String lower = method.getName().toLowerCase();
-                if (lower.contains("skin") || lower.contains("model") || lower.contains("cape")) {
-                    System.out.println("ORACLE-METHOD " + method.getReturnType().getSimpleName() + " " + method.getName());
+                StringBuilder params = new StringBuilder();
+                for (Class<?> p : method.getParameterTypes()) {
+                    if (params.length() > 0) {
+                        params.append(",");
+                    }
+                    params.append(p.getSimpleName());
                 }
+                System.out.println("ORACLE2-METHOD " + method.getReturnType().getSimpleName() + " "
+                        + method.getName() + "(" + params + ")");
             }
         } catch (ClassNotFoundException e) {
-            System.out.println("ORACLE-MISSING " + name);
+            System.out.println("ORACLE2-MISSING");
         }
     }
 }
