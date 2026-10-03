@@ -48,10 +48,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
 }
 
-mixin {
-    add sourceSets.main, 'simpleskins.refmap.json'
-}
-
 tasks.named('processResources', ProcessResources).configure {
     var replaceProperties = [
             minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
