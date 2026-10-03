@@ -18,6 +18,10 @@ minecraft {
     mappings channel: mapping_channel, version: mapping_version
     copyIdeResources = true
 
+    // Widens PlayerInfo#registerTextures so the client applier can re-run
+    // vanilla skin loading after a texture swap.
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
     runs {
         configureEach {
             workingDirectory project.file('run')

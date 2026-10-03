@@ -2,9 +2,9 @@ package com.simpleskins.simpleskins;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.SimpleChannel;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -14,7 +14,7 @@ import java.util.function.Supplier;
  * Empty value means "back to default".
  */
 public final class SkinNetwork {
-    public static final SimpleChannel CHANNEL = ChannelBuilder
+    public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
             .named(new ResourceLocation(SimpleSkins.MOD_ID, "main"))
             .networkProtocolVersion(() -> "1")
             .clientAcceptedVersions(version -> true)
