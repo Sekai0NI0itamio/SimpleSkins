@@ -98,7 +98,7 @@ public final class ClientSkinApplier {
                 refreshTextures = method = found;
             }
             method.invoke(info);
-        } catch (ReflectiveOperationException | SecurityException | RuntimeException e) {
+        } catch (ReflectiveOperationException | RuntimeException e) {
             SimpleSkins.LOGGER.error("SimpleSkins cannot refresh skins", e);
         }
     }
