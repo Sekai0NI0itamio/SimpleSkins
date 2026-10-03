@@ -8,18 +8,6 @@ pluginManagement {
     }
 }
 
-buildscript {
-    repositories {
-        maven {
-            name = 'Sponge'
-            url = 'https://repo.spongepowered.org/repository/maven-public/'
-        }
-    }
-    dependencies {
-        classpath 'org.spongepowered:mixin-gradle:0.7.+'
-    }
-}
-
 plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '0.7.0'
 }
