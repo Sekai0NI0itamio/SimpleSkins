@@ -63,6 +63,6 @@ public final class ClientSkinApplier {
             String signatureOrNull = signature == null || signature.isEmpty() ? null : signature;
             profile.getProperties().put("textures", new Property("textures", value, signatureOrNull));
         }
-        info.registerTextures();
+        net.minecraft.client.multiplayer.SimpleSkinsHooks.refreshTextures(info);
     }
 }
