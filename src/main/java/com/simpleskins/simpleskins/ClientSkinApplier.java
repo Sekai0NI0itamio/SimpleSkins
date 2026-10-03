@@ -56,6 +56,8 @@ public final class ClientSkinApplier {
         });
     }
 
+    private static volatile java.lang.reflect.Method refreshTextures;
+
     private static void applyTo(PlayerInfo info, String value, String signature) {
         GameProfile profile = info.getProfile();
         profile.getProperties().removeAll("textures");
@@ -63,6 +65,41 @@ public final class ClientSkinApplier {
             String signatureOrNull = signature == null || signature.isEmpty() ? null : signature;
             profile.getProperties().put("textures", new Property("textures", value, signatureOrNull));
         }
-        ((com.simpleskins.simpleskins.mixin.PlayerInfoAccessor) info).simpleskins$refreshTextures();
+        refresh(info);
+    }
+
+    /**
+     * Runs vanilla's texture registration without naming it: PlayerInfo has
+     * exactly one void no-arg method (verified against 1.20.1), so this works
+     * in dev and in obfuscated production alike. Failures only log.
+     */
+    private static void refresh(PlayerInfo info) {
+        try {
+            java.lang.reflect.Method method = refreshTextures;
+            if (method == null) {
+                java.lang.reflect.Method found = null;
+                for (java.lang.reflect.Method candidate : PlayerInfo.class.getDeclaredMethods()) {
+                    if (candidate.getReturnType() == void.class
+                            && candidate.getParameterCount() == 0
+                            && !candidate.isSynthetic()
+                            && !candidate.isBridge()) {
+                        if (found != null) {
+                            SimpleSkins.LOGGER.error("SimpleSkins cannot refresh skins: ambiguous texture method");
+                            return;
+                        }
+                        found = candidate;
+                    }
+                }
+                if (found == null) {
+                    SimpleSkins.LOGGER.error("SimpleSkins cannot refresh skins: texture method not found");
+                    return;
+                }
+                found.setAccessible(true);
+                refreshTextures = method = found;
+            }
+            method.invoke(info);
+        } catch (ReflectiveOperationException | SecurityException | RuntimeException e) {
+            SimpleSkins.LOGGER.error("SimpleSkins cannot refresh skins", e);
+        }
     }
 }
